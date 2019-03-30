@@ -1,15 +1,23 @@
 """ This module provides the Track object """
+from spotifyapi.artist import Artist
 
 
 class Track:
     def __init__(self, data):
         # TODO: Add album
-        # TODO: Add artists
+        self._artists = [Artist(artist_data) for artist_data in data['artists']]
         self._duration_ms = data['duration_ms']
         self._explicit = data['explicit']
         self._name = data['name']
         self._id = data['id']
         self._popularity = data['popularity']
+
+    @property
+    def artists(self):
+        """
+        The artists who performed the track.
+        """
+        return self._artists
 
     @property
     def duration_ms(self):
