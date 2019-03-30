@@ -1,10 +1,11 @@
 """ This module provides the Track object """
+from spotifyapi.album import Album
 from spotifyapi.artist import Artist
 
 
 class Track:
     def __init__(self, data):
-        # TODO: Add album
+        self._album = Album(data['album'])
         self._artists = [Artist(artist_data) for artist_data in data['artists']]
         self._duration_ms = data['duration_ms']
         self._explicit = data['explicit']
@@ -13,10 +14,16 @@ class Track:
         self._popularity = data['popularity']
 
     @property
+    def album(self):
+        """
+        The album on which the track appears. The album object includes a link in href to full information about the
+        album.
+        """
+        return self._album
+
+    @property
     def artists(self):
-        """
-        The artists who performed the track.
-        """
+        """ The artists who performed the track. """
         return self._artists
 
     @property
