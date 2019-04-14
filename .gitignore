@@ -116,3 +116,5 @@ dmypy.json
 # Etc
 .idea/
 test.py
+.pylintrc
+.gitattributes
