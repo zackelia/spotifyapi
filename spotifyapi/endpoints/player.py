@@ -93,25 +93,28 @@ class PlayerEndpoint(EndpointBase):
 
         return CurrentlyPlaying(response.json())
 
-    def pause(self, device_id: Optional[str] = None) -> None:
+    def pause(self, device: Optional[Device] = None) -> None:
         """Pause playback on the user’s account.
 
         Args:
-            device_id: The id of the device this command is targeting. If not supplied, the user’s currently active
-                device is the target.
+            device: The device this command is targeting. If not supplied, the user’s currently active device is the
+                target.
         """
-        params = {"device_id": device_id}
+        params = {}
+
+        if device:
+            params["device_id"] = device.id
 
         self._put(f"{self._url}/pause", params=params)
 
-    def seek(self, position_ms: int, device_id: Optional[str] = None) -> None:
+    def seek(self, position_ms: int, device: Optional[Device] = None) -> None:
         """Seeks to the given position in the user’s currently playing track.
 
         Args:
             position_ms: The position in milliseconds to seek to. Must be a positive number. Passing in a position that
                 is greater than the length of the track will cause the player to start playing the next song.
-            device_id: The id of the device this command is targeting. If not supplied, the user’s currently active
-                device is the target.
+            device: The device this command is targeting. If not supplied, the user’s currently active device is the
+                target.
 
         Raises:
             ValueError: If `position_ms` is not a positive value
@@ -119,11 +122,14 @@ class PlayerEndpoint(EndpointBase):
         if position_ms < 0:
             raise ValueError("position_ms must be a positive value")
 
-        params = {"position_ms": position_ms, "device_id": device_id}
+        params = {"position_ms": position_ms}
+
+        if device:
+            params["device"] = device.id
 
         self._put(f"{self._url}/seek", params=params)
 
-    def repeat(self, state: str, device_id: Optional[str] = None) -> None:
+    def repeat(self, state: str, device: Optional[Device] = None) -> None:
         """Set the repeat mode for the user’s playback. Options are repeat-track, repeat-context, and off.
 
         Args:
@@ -131,8 +137,8 @@ class PlayerEndpoint(EndpointBase):
                 track will repeat the current track.
                 context will repeat the current context.
                 off will turn repeat off.
-            device_id: The id of the device this command is targeting. If not supplied, the user’s currently active
-                device is the target.
+            device: The device this command is targeting. If not supplied, the user’s currently active device is the
+                target.
 
         Raises:
             ValueError: If `state` is not a valid option
@@ -140,17 +146,20 @@ class PlayerEndpoint(EndpointBase):
         if state not in ["track", "context", "off"]:
             raise ValueError("state must be track, context, or off")
 
-        params = {"state": state, "device_id": device_id}
+        params = {"state": state}
+
+        if device:
+            params["device_id"] = device.id
 
         self._put(f"{self._url}/repeat", params=params)
 
-    def volume(self, volume_percent: int, device_id: Optional[str] = None) -> None:
+    def volume(self, volume_percent: int, device: Optional[Device] = None) -> None:
         """Set the volume for the user’s current playback device.
 
         Args:
             volume_percent: The volume to set. Must be a value from 0 to 100 inclusive.
-            device_id: The id of the device this command is targeting. If not supplied, the user’s currently active
-                device is the target.
+            device: The device this command is targeting. If not supplied, the user’s currently active device is the
+                target.
 
         Raises:
             ValueError: If `volume_percent` is not between 0 and 100
@@ -158,54 +167,69 @@ class PlayerEndpoint(EndpointBase):
         if not 0 <= volume_percent <= 100:
             raise ValueError("volume_percent must be between 0 and 100")
 
-        params = {"volume_percent": volume_percent, "device_id": device_id}
+        params = {"volume_percent": volume_percent}
+
+        if device:
+            params["device_id"] = device.id
 
         self._put(f"{self._url}/volume", params=params)
 
-    def next(self, device_id: Optional[str] = None) -> None:
+    def next(self, device: Optional[Device] = None) -> None:
         """Skips to next track in the user’s queue.
 
         Args:
-            device_id: The id of the device this command is targeting. If not supplied, the user’s currently active
-            device is the target.
+            device: The device this command is targeting. If not supplied, the user’s currently active device is the
+                target.
         """
-        params = {"device_id": device_id}
+        params = {}
+
+        if device:
+            params["device_id"] = device.id
 
         self._post(f"{self._url}/next", params=params)
 
-    def previous(self, device_id: Optional[str] = None) -> None:
+    def previous(self, device: Optional[Device] = None) -> None:
         """Skips to previous track in the user’s queue.
 
         Args:
-            device_id: The id of the device this command is targeting. If not supplied, the user’s currently active
-                device is the target.
+            device: The device this command is targeting. If not supplied, the user’s currently active device is the
+                target.
         """
-        params = {"device_id": device_id}
+        params = {}
+
+        if device:
+            params["device_id"] = device.id
 
         self._post(f"{self._url}/previous", params=params)
 
-    def play(self, device_id: Optional[str] = None) -> None:
+    def play(self, device: Optional[Device] = None) -> None:
         """Start a new context or resume current playback on the user’s active device.
 
         Args:
-            device_id: The id of the device this command is targeting. If not supplied, the user’s currently active
-                device is the target.
+            device: The device this command is targeting. If not supplied, the user’s currently active device is the
+                target.
         """
-        params = {"device_id": device_id}
+        params = {}
+
+        if device:
+            params["device_id"] = device.id
 
         self._put(f"{self._url}/play", params=params)
 
-    def shuffle(self, state: bool, device_id: Optional[str] = None) -> None:
+    def shuffle(self, state: bool, device: Optional[Device] = None) -> None:
         """Toggle shuffle on or off for user’s playback.
 
         Args:
             state:
                 True : Shuffle user’s playback
                 False : Do not shuffle user’s playback.
-            device_id: The id of the device this command is targeting. If not supplied, the user’s currently active
-                device is the target.
+            device: The device this command is targeting. If not supplied, the user’s currently active device is the
+                target.
         """
-        params = {"state": state, "device_id": device_id}
+        params = {"state": state}
+
+        if device:
+            params["device_id"] = device.id
 
         self._put(f"{self._url}/shuffle", params=params)
 
