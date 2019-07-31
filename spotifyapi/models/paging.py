@@ -1,5 +1,5 @@
 """Provide the paging model."""
-from typing import Any, List, Optional
+from typing import Any, Dict, List, Optional
 
 
 class Paging:
@@ -9,16 +9,14 @@ class Paging:
     calls.
     """
 
-    def __init__(self, data, obj: Any):
+    def __init__(self, data, object_factory: Any):
         self._href = data["href"]
-        self._items = [obj(d) for d in data["items"]]
+        self._items = [object_factory(d) for d in data["items"]]
         self._limit = data["limit"]
         self._next = data["next"]
-        self._offset = data["offset"]
-        self._previous = data["previous"]
-        self._total = data["total"]
+        self._cursors = data["cursors"]
 
-        self._obj = obj
+        self._obj = object_factory
 
     @property
     def href(self) -> str:
@@ -41,16 +39,6 @@ class Paging:
         return self._next
 
     @property
-    def offset(self) -> int:
-        """The offset of the items returned (as set in the query or by default)."""
-        return self._offset
-
-    @property
-    def previous(self) -> Optional[str]:
-        """URL to the previous page of items."""
-        return self._previous
-
-    @property
-    def total(self) -> int:
-        """The maximum number of items available to return."""
-        return self._total
+    def cursors(self) -> Dict[str, str]:
+        """The cursors used to find the next set of items."""
+        return self._cursors

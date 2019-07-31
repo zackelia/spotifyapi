@@ -2,6 +2,7 @@
 from typing import Optional
 
 from .context import Context
+from .device import Device
 from .full_track import FullTrack
 
 
@@ -45,3 +46,29 @@ class CurrentlyPlaying:
     def currently_playing_type(self) -> str:
         """The object type of the currently playing item. Can be one of track, episode, ad or unknown."""
         return self._currently_playing_type
+
+
+class CurrentlyPlayingContext(CurrentlyPlaying):
+    """Information about the currently playing track."""
+
+    def __init__(self, data):
+        super().__init__(data)
+
+        self._device = data["device"]
+        self._repeat_state = data["repeat_state"]
+        self._shuffle_state = data["shuffle_state"]
+
+    @property
+    def device(self) -> Device:
+        """The device that is currently active."""
+        return self._device
+
+    @property
+    def repeat_state(self) -> str:
+        """off, track, context."""
+        return self._repeat_state
+
+    @property
+    def shuffle_state(self) -> bool:
+        """If shuffle is on or off."""
+        return self._shuffle_state
