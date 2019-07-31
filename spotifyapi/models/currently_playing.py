@@ -54,7 +54,7 @@ class CurrentlyPlayingContext(CurrentlyPlaying):
     def __init__(self, data):
         super().__init__(data)
 
-        self._device = data["device"]
+        self._device = Device(data["device"])
         self._repeat_state = data["repeat_state"]
         self._shuffle_state = data["shuffle_state"]
 

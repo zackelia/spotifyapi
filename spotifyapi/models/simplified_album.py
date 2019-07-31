@@ -1,33 +1,24 @@
-"""Provide the album model."""
+"""Provide the simplified album model."""
 from typing import Dict, List
 
-from .copyright import Copyright
 from .image import Image
-from .paging import Paging
 from .simplified_artist import SimplifiedArtist
-from .simplified_track import SimplifiedTrack
 
 
-class Album:
-    """An album."""
+class SimplifiedAlbum:
+    """A simplified album."""
 
     def __init__(self, data):
         self._album_type = data["album_type"]
         self._artists = [SimplifiedArtist(d) for d in data["artists"]]
         self._available_markets = data["available_markets"]
-        self._copyrights = [Copyright(d) for d in data["copyrights"]]
-        self._external_ids = data["external_ids"]
         self._external_urls = data["external_urls"]
-        self._genres = data["genres"]
         self._href = data["href"]
         self._id = data["id"]
         self._images = [Image(d) for d in data["images"]]
-        self._label = data["label"]
         self._name = data["name"]
-        self._popularity = data["popularity"]
         self._release_date = data["release_date"]
         self._release_date_precision = data["release_date_precision"]
-        self._tracks = Paging(data["tracks"], SimplifiedTrack)
         self._type = data["type"]
         self._uri = data["uri"]
 
@@ -53,24 +44,9 @@ class Album:
         return self._available_markets
 
     @property
-    def copyrights(self) -> List[Copyright]:
-        """The copyright statements of the album."""
-        return self._copyrights
-
-    @property
-    def external_ids(self) -> Dict[str, str]:
-        """Known external IDs for the album."""
-        return self._external_ids
-
-    @property
     def external_urls(self) -> Dict[str, str]:
         """Known external URLs for this album."""
         return self._external_urls
-
-    @property
-    def genres(self) -> List[str]:
-        """A list of the genres used to classify the album. For example: "Prog Rock" , "Post-Grunge"."""
-        return self._genres
 
     @property
     def href(self) -> str:
@@ -88,22 +64,9 @@ class Album:
         return self._images
 
     @property
-    def label(self) -> str:
-        """The label for the album."""
-        return self._label
-
-    @property
     def name(self) -> str:
         """The name of the album. In case of an album takedown, the value may be an empty string."""
         return self._name
-
-    @property
-    def popularity(self) -> int:
-        """
-        The popularity of the album. The value will be between 0 and 100, with 100 being the most popular. The
-        popularity is calculated from the popularity of the album’s individual tracks.
-        """
-        return self._popularity
 
     @property
     def release_date(self) -> str:
@@ -117,11 +80,6 @@ class Album:
     def release_date_precision(self) -> str:
         """The precision with which release_date value is known: year, month, or day."""
         return self._release_date_precision
-
-    @property
-    def tracks(self) -> Paging:
-        """The tracks of the album."""
-        return self._tracks
 
     @property
     def type(self) -> str:

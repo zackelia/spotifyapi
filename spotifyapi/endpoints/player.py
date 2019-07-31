@@ -33,7 +33,7 @@ class PlayerEndpoint(EndpointBase):
         """
         response = self._get(f"{self._url}")
 
-        return CurrentlyPlayingContext(response)
+        return CurrentlyPlayingContext(response.json())
 
     def get_recently_played_tracks(
         self,
@@ -218,6 +218,6 @@ class PlayerEndpoint(EndpointBase):
                 True: ensure playback happens on new device.
                 False/None: keep the current playback state.
         """
-        params = {"device_ids": device.id, "play": play}
+        data = {"device_ids": [device.id], "play": play}
 
-        self._put(f"{self._url}", params=params)
+        self._put(f"{self._url}", data=data)

@@ -1,4 +1,5 @@
 """Provide the endpoint superclass."""
+import json
 import requests
 
 from ..exceptions import ExpiredTokenError
@@ -22,6 +23,11 @@ class EndpointBase:
 
     def __request(self, method, url: str, **kwargs) -> requests.models.Response:
         headers = {"Authorization": "Bearer {}".format(self._access_token)}
+
+        # Serialize data to json
+        if "data" in kwargs:
+            kwargs["data"] = json.dumps(kwargs["data"])
+
         response = method(url, headers=headers, **kwargs)
 
         try:
