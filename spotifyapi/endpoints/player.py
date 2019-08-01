@@ -6,6 +6,13 @@ from ..models.currently_playing import CurrentlyPlaying, CurrentlyPlayingContext
 from ..models.device import Device
 from ..models.paging import Paging
 from ..models.play_history import PlayHistory
+from ..utils.decorators import scope
+from ..utils.scope import (
+    user_modify_playback_state,
+    user_read_currently_playing,
+    user_read_playback_state,
+    user_read_recently_played,
+)
 
 
 class PlayerEndpoint(EndpointBase):
@@ -16,6 +23,7 @@ class PlayerEndpoint(EndpointBase):
 
         self._url += "/me/player"
 
+    @scope(user_read_playback_state)
     def get_devices(self) -> List[Device]:
         """Get information about a user’s available devices.
 
@@ -25,6 +33,7 @@ class PlayerEndpoint(EndpointBase):
 
         return [Device(data) for data in response.json()["devices"]]
 
+    @scope(user_read_playback_state)
     def get_playback(self) -> CurrentlyPlayingContext:
         """Get information about the user’s current playback state, including track, track progress, and active device.
 
@@ -35,6 +44,7 @@ class PlayerEndpoint(EndpointBase):
 
         return CurrentlyPlayingContext(response.json())
 
+    @scope(user_read_recently_played)
     def get_recently_played_tracks(
         self,
         limit: Optional[int] = None,
@@ -83,6 +93,7 @@ class PlayerEndpoint(EndpointBase):
             response = self._get(paging.next)
             paging = Paging(response.json(), PlayHistory)
 
+    @scope(user_read_currently_playing, user_read_playback_state)
     def get_currently_playing_track(self) -> CurrentlyPlaying:
         """Get the object currently being played on the user’s Spotify account.
 
@@ -93,6 +104,7 @@ class PlayerEndpoint(EndpointBase):
 
         return CurrentlyPlaying(response.json())
 
+    @scope(user_modify_playback_state)
     def pause(self, device: Optional[Device] = None) -> None:
         """Pause playback on the user’s account.
 
@@ -107,6 +119,7 @@ class PlayerEndpoint(EndpointBase):
 
         self._put(f"{self._url}/pause", params=params)
 
+    @scope(user_modify_playback_state)
     def seek(self, position_ms: int, device: Optional[Device] = None) -> None:
         """Seeks to the given position in the user’s currently playing track.
 
@@ -129,6 +142,7 @@ class PlayerEndpoint(EndpointBase):
 
         self._put(f"{self._url}/seek", params=params)
 
+    @scope(user_modify_playback_state)
     def repeat(self, state: str, device: Optional[Device] = None) -> None:
         """Set the repeat mode for the user’s playback. Options are repeat-track, repeat-context, and off.
 
@@ -153,6 +167,7 @@ class PlayerEndpoint(EndpointBase):
 
         self._put(f"{self._url}/repeat", params=params)
 
+    @scope(user_modify_playback_state)
     def volume(self, volume_percent: int, device: Optional[Device] = None) -> None:
         """Set the volume for the user’s current playback device.
 
@@ -174,6 +189,7 @@ class PlayerEndpoint(EndpointBase):
 
         self._put(f"{self._url}/volume", params=params)
 
+    @scope(user_modify_playback_state)
     def next(self, device: Optional[Device] = None) -> None:
         """Skips to next track in the user’s queue.
 
@@ -188,6 +204,7 @@ class PlayerEndpoint(EndpointBase):
 
         self._post(f"{self._url}/next", params=params)
 
+    @scope(user_modify_playback_state)
     def previous(self, device: Optional[Device] = None) -> None:
         """Skips to previous track in the user’s queue.
 
@@ -202,6 +219,7 @@ class PlayerEndpoint(EndpointBase):
 
         self._post(f"{self._url}/previous", params=params)
 
+    @scope(user_modify_playback_state)
     def play(self, device: Optional[Device] = None) -> None:
         """Start a new context or resume current playback on the user’s active device.
 
@@ -216,6 +234,7 @@ class PlayerEndpoint(EndpointBase):
 
         self._put(f"{self._url}/play", params=params)
 
+    @scope(user_modify_playback_state)
     def shuffle(self, state: bool, device: Optional[Device] = None) -> None:
         """Toggle shuffle on or off for user’s playback.
 
@@ -233,6 +252,7 @@ class PlayerEndpoint(EndpointBase):
 
         self._put(f"{self._url}/shuffle", params=params)
 
+    @scope(user_modify_playback_state)
     def transfer_playback(self, device: Device, play: Optional[bool] = None) -> None:
         """Transfer playback to a new device and determine if it should start playing.
 
