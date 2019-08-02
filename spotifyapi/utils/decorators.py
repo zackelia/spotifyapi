@@ -1,6 +1,8 @@
 """Provide the decorators module."""
 import requests
 
+from ..exceptions import InvalidScopeError
+
 
 def scope(*scopes):
     """Decorator for calls that require scope."""
@@ -12,7 +14,7 @@ def scope(*scopes):
             except requests.exceptions.HTTPError as e:
                 # Check for Client Error 401 Unauthorized
                 if e.response.status_code == 401:
-                    raise ValueError(
+                    raise InvalidScopeError(
                         f"{func.__qualname__} requires: {[scope for scope in scopes]}"
                     )
                 raise

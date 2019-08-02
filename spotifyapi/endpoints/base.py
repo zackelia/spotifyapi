@@ -2,7 +2,7 @@
 import json
 import requests
 
-from ..exceptions import ExpiredTokenError
+from ..exceptions import ExpiredTokenError, SpotifyAPIError
 
 
 class EndpointBase:
@@ -33,8 +33,8 @@ class EndpointBase:
         try:
             response.raise_for_status()
         except requests.exceptions.HTTPError:
-            if response.json()["error"]["message"] == "The access token expired":
+            if "token expired" in response.json()["error"]["message"]:
                 raise ExpiredTokenError(self._access_token)
-            raise
+            raise SpotifyAPIError(response.json()["error"]["message"])
 
         return response
