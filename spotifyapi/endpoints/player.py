@@ -65,8 +65,8 @@ class PlayerEndpoint(EndpointBase):
                 If specified `limit` is outside the valid range
                 If both `after` and `before` are specified
 
-        Yields:
-            A play history.
+        Returns:
+            A generator of play histories.
         """
         # If limit is specified, check that it is a legitimate value
         if limit and not 1 <= limit <= 50:
@@ -82,16 +82,7 @@ class PlayerEndpoint(EndpointBase):
 
         paging = Paging(response.json(), PlayHistory)
 
-        # Yield all play history objects
-        while True:
-            for item in paging.items:
-                yield item
-
-            if not paging.next:
-                break
-
-            response = self._get(paging.next)
-            paging = Paging(response.json(), PlayHistory)
+        return self._generate(paging, PlayHistory)
 
     @scope(user_read_currently_playing, user_read_playback_state)
     def get_currently_playing_track(self) -> CurrentlyPlaying:
