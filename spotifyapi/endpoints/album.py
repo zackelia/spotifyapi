@@ -13,7 +13,7 @@ class AlbumEndpoint(EndpointBase):
     def __init__(self, access_token: str):
         super().__init__(access_token)
 
-        self._url += "/albums"
+        self._albums = f"{self._base_url}/albums"
 
     def get_album(self, id: str) -> FullAlbum:
         """Get Spotify catalog information for a single album.
@@ -24,7 +24,7 @@ class AlbumEndpoint(EndpointBase):
         Returns:
             The album with specified ID.
         """
-        response = self._get(f"{self._url}/{id}")
+        response = self._get(f"{self._albums}/{id}")
 
         return FullAlbum(response.json())
 
@@ -51,7 +51,7 @@ class AlbumEndpoint(EndpointBase):
 
         params = {"limit": limit, "offset": offset}
 
-        response = self._get(f"{self._url}/{id}/tracks", params=params)
+        response = self._get(f"{self._albums}/{id}/tracks", params=params)
 
         paging = Paging(response.json(), SimplifiedTrack)
 
@@ -71,6 +71,6 @@ class AlbumEndpoint(EndpointBase):
 
         params = {"ids": ",".join(ids)}
 
-        response = self._get(f"{self._url}", params=params)
+        response = self._get(f"{self._albums}", params=params)
 
         return [FullAlbum(data) if data else None for data in response.json()["albums"]]

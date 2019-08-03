@@ -12,7 +12,7 @@ class EndpointBase:
 
     def __init__(self, access_token: str):
         self._access_token = access_token
-        self._url = "https://api.spotify.com/v1"
+        self._base_url = "https://api.spotify.com/v1"
 
     def _get(self, url: str, **kwargs) -> requests.models.Response:
         return self.__request(requests.get, url, **kwargs)

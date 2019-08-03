@@ -21,7 +21,7 @@ class PlayerEndpoint(EndpointBase):
     def __init__(self, access_token: str):
         super().__init__(access_token)
 
-        self._url += "/me/player"
+        self._player = f"{self._base_url}/me/player"
 
     @scope(user_read_playback_state)
     def get_devices(self) -> List[Device]:
@@ -29,7 +29,7 @@ class PlayerEndpoint(EndpointBase):
 
         Returns: A list of devices
         """
-        response = self._get(f"{self._url}/devices")
+        response = self._get(f"{self._player}/devices")
 
         return [Device(data) for data in response.json()["devices"]]
 
@@ -40,7 +40,7 @@ class PlayerEndpoint(EndpointBase):
         Returns:
             Current playback information.
         """
-        response = self._get(f"{self._url}")
+        response = self._get(f"{self._player}")
 
         return CurrentlyPlayingContext(response.json())
 
@@ -78,7 +78,7 @@ class PlayerEndpoint(EndpointBase):
 
         params = {"limit": limit, "after": after, "before": before}
 
-        response = self._get(f"{self._url}/recently-played", params=params)
+        response = self._get(f"{self._player}/recently-played", params=params)
 
         paging = Paging(response.json(), PlayHistory)
 
@@ -91,7 +91,7 @@ class PlayerEndpoint(EndpointBase):
         Returns:
             Currently playing object information.
         """
-        response = self._get(f"{self._url}/currently-playing")
+        response = self._get(f"{self._player}/currently-playing")
 
         return CurrentlyPlaying(response.json())
 
@@ -108,7 +108,7 @@ class PlayerEndpoint(EndpointBase):
         if device:
             params["device_id"] = device.id
 
-        self._put(f"{self._url}/pause", params=params)
+        self._put(f"{self._player}/pause", params=params)
 
     @scope(user_modify_playback_state)
     def seek(self, position_ms: int, device: Optional[Device] = None) -> None:
@@ -131,7 +131,7 @@ class PlayerEndpoint(EndpointBase):
         if device:
             params["device"] = device.id
 
-        self._put(f"{self._url}/seek", params=params)
+        self._put(f"{self._player}/seek", params=params)
 
     @scope(user_modify_playback_state)
     def repeat(self, state: str, device: Optional[Device] = None) -> None:
@@ -156,7 +156,7 @@ class PlayerEndpoint(EndpointBase):
         if device:
             params["device_id"] = device.id
 
-        self._put(f"{self._url}/repeat", params=params)
+        self._put(f"{self._player}/repeat", params=params)
 
     @scope(user_modify_playback_state)
     def volume(self, volume_percent: int, device: Optional[Device] = None) -> None:
@@ -178,7 +178,7 @@ class PlayerEndpoint(EndpointBase):
         if device:
             params["device_id"] = device.id
 
-        self._put(f"{self._url}/volume", params=params)
+        self._put(f"{self._player}/volume", params=params)
 
     @scope(user_modify_playback_state)
     def next(self, device: Optional[Device] = None) -> None:
@@ -193,7 +193,7 @@ class PlayerEndpoint(EndpointBase):
         if device:
             params["device_id"] = device.id
 
-        self._post(f"{self._url}/next", params=params)
+        self._post(f"{self._player}/next", params=params)
 
     @scope(user_modify_playback_state)
     def previous(self, device: Optional[Device] = None) -> None:
@@ -208,7 +208,7 @@ class PlayerEndpoint(EndpointBase):
         if device:
             params["device_id"] = device.id
 
-        self._post(f"{self._url}/previous", params=params)
+        self._post(f"{self._player}/previous", params=params)
 
     @scope(user_modify_playback_state)
     def play(self, device: Optional[Device] = None) -> None:
@@ -223,7 +223,7 @@ class PlayerEndpoint(EndpointBase):
         if device:
             params["device_id"] = device.id
 
-        self._put(f"{self._url}/play", params=params)
+        self._put(f"{self._player}/play", params=params)
 
     @scope(user_modify_playback_state)
     def shuffle(self, state: bool, device: Optional[Device] = None) -> None:
@@ -241,7 +241,7 @@ class PlayerEndpoint(EndpointBase):
         if device:
             params["device_id"] = device.id
 
-        self._put(f"{self._url}/shuffle", params=params)
+        self._put(f"{self._player}/shuffle", params=params)
 
     @scope(user_modify_playback_state)
     def transfer_playback(self, device: Device, play: Optional[bool] = None) -> None:
@@ -255,4 +255,4 @@ class PlayerEndpoint(EndpointBase):
         """
         data = {"device_ids": [device.id], "play": play}
 
-        self._put(f"{self._url}", data=data)
+        self._put(f"{self._player}", data=data)
