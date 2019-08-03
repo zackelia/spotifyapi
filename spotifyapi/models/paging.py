@@ -14,7 +14,6 @@ class Paging:
         self._items = [object_factory(d) for d in data["items"]]
         self._limit = data["limit"]
         self._next = data["next"]
-        self._cursors = data["cursors"]
 
         self._obj = object_factory
 
@@ -37,8 +36,3 @@ class Paging:
     def next(self) -> Optional[str]:
         """URL to the next page of items."""
         return self._next
-
-    @property
-    def cursors(self) -> Dict[str, str]:
-        """The cursors used to find the next set of items."""
-        return self._cursors
