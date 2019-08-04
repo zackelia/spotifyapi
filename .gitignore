@@ -119,4 +119,3 @@ dmypy.json
 test.py
 .pylintrc
 .gitattributes
-requirements-dev.txt
