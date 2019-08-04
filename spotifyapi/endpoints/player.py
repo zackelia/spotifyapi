@@ -6,6 +6,7 @@ from ..models.currently_playing import CurrentlyPlaying, CurrentlyPlayingContext
 from ..models.device import Device
 from ..models.paging import Paging
 from ..models.play_history import PlayHistory
+from ..models.token import Token
 from ..utils.decorators import scope
 from ..utils.scope import (
     user_modify_playback_state,
@@ -18,8 +19,8 @@ from ..utils.scope import (
 class PlayerEndpoint(EndpointBase):
     """Retrieve and modify the user's playback."""
 
-    def __init__(self, access_token: str):
-        super().__init__(access_token)
+    def __init__(self, token: Token):
+        super().__init__(token)
 
         self._player = f"{self._base_url}/me/player"
 

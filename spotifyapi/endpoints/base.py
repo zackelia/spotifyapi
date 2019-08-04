@@ -5,13 +5,14 @@ from typing import Any, Generator
 
 from ..exceptions import ExpiredTokenError, SpotifyAPIError
 from ..models.paging import Paging
+from ..models.token import Token
 
 
 class EndpointBase:
     """Base endpoint functionality."""
 
-    def __init__(self, access_token: str):
-        self._access_token = access_token
+    def __init__(self, token: Token):
+        self._token = token
         self._base_url = "https://api.spotify.com/v1"
 
     def _get(self, url: str, **kwargs) -> requests.models.Response:
@@ -24,7 +25,7 @@ class EndpointBase:
         return self.__request(requests.post, url, **kwargs)
 
     def __request(self, method, url: str, **kwargs) -> requests.models.Response:
-        headers = {"Authorization": "Bearer {}".format(self._access_token)}
+        headers = {"Authorization": "Bearer {}".format(self._token.access_token)}
 
         # Serialize data to json
         if "data" in kwargs:
@@ -36,7 +37,7 @@ class EndpointBase:
             response.raise_for_status()
         except requests.exceptions.HTTPError:
             if "token expired" in response.json()["error"]["message"]:
-                raise ExpiredTokenError(self._access_token)
+                raise ExpiredTokenError(self._token.access_token)
             raise SpotifyAPIError(response.json()["error"]["message"])
 
         return response

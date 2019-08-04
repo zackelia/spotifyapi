@@ -5,13 +5,14 @@ from .base import EndpointBase
 from ..models.full_album import FullAlbum
 from ..models.simplified_track import SimplifiedTrack
 from ..models.paging import Paging
+from ..models.token import Token
 
 
 class AlbumEndpoint(EndpointBase):
     """Endpoints for retrieving information about one or more albums from the Spotify catalog."""
 
-    def __init__(self, access_token: str):
-        super().__init__(access_token)
+    def __init__(self, token: Token):
+        super().__init__(token)
 
         self._albums = f"{self._base_url}/albums"
 
