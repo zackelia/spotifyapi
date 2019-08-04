@@ -17,7 +17,7 @@ is still possible to use the individual endpoints such as AlbumEndpoint, PlayerE
 ```python
 from spotifyapi import SpotifyEndpoint
 
-spotify = SpotifyEndpoint(ACCESS_TOKEN)
+spotify = SpotifyEndpoint(token)
 
 # Print out all of the recently played songs
 for recent in spotify.get_recently_played_tracks():
