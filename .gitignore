@@ -119,3 +119,4 @@ dmypy.json
 test.py
 .pylintrc
 .gitattributes
+.vscode
