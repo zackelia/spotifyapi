@@ -35,15 +35,19 @@ class PlayerEndpoint(EndpointBase):
         return [Device(data) for data in response.json()["devices"]]
 
     @scope(user_read_playback_state)
-    def get_playback(self) -> CurrentlyPlayingContext:
+    def get_playback(self) -> Optional[CurrentlyPlayingContext]:
         """Get information about the user’s current playback state, including track, track progress, and active device.
+
+        The information returned is for the last known state, which means an inactive device could be returned if it was
+        the last one to execute playback. When no available devices are found, None is returned.
 
         Returns:
             Current playback information.
         """
         response = self._get(f"{self._player}")
 
-        return CurrentlyPlayingContext(response.json())
+        if response:
+            return CurrentlyPlayingContext(response.json())
 
     @scope(user_read_recently_played)
     def get_recently_played_tracks(
@@ -86,15 +90,20 @@ class PlayerEndpoint(EndpointBase):
         return self._generate(paging, PlayHistory)
 
     @scope(user_read_currently_playing, user_read_playback_state)
-    def get_currently_playing_track(self) -> CurrentlyPlaying:
+    def get_currently_playing_track(self) -> Optional[CurrentlyPlaying]:
         """Get the object currently being played on the user’s Spotify account.
+
+        The information returned is for the last known state, which means an inactive device could be returned if it was
+        the last one to execute playback. When no available devices are found, None is returned. If private session is
+        enabled, None is returned.
 
         Returns:
             Currently playing object information.
         """
         response = self._get(f"{self._player}/currently-playing")
 
-        return CurrentlyPlaying(response.json())
+        if response:
+            return CurrentlyPlaying(response.json())
 
     @scope(user_modify_playback_state)
     def pause(self, device: Optional[Device] = None) -> None:

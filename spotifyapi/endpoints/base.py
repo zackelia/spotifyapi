@@ -1,7 +1,7 @@
 """Provide the endpoint superclass."""
 import json
 import requests
-from typing import Any, Generator
+from typing import Any, Generator, Optional
 
 from ..exceptions import ExpiredTokenError, SpotifyAPIError
 from ..models.paging import Paging
@@ -24,7 +24,9 @@ class EndpointBase:
     def _post(self, url: str, **kwargs) -> requests.models.Response:
         return self.__request(requests.post, url, **kwargs)
 
-    def __request(self, method, url: str, **kwargs) -> requests.models.Response:
+    def __request(
+        self, method, url: str, **kwargs
+    ) -> Optional[requests.models.Response]:
         headers = {"Authorization": "Bearer {}".format(self._token.access_token)}
 
         # Serialize data to json
@@ -32,6 +34,10 @@ class EndpointBase:
             kwargs["data"] = json.dumps(kwargs["data"])
 
         response = method(url, headers=headers, **kwargs)
+
+        # Check if there's no content so we don't try to create an instance of something
+        if response.status_code == requests.codes.no_content:
+            return None
 
         try:
             response.raise_for_status()
