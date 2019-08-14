@@ -2,11 +2,14 @@
 from typing import List, Generator, Optional
 
 from .base import EndpointBase
-from ..models.currently_playing import CurrentlyPlaying, CurrentlyPlayingContext
-from ..models.device import Device
-from ..models.paging import Paging
-from ..models.play_history import PlayHistory
-from ..models.token import Token
+from ..models import (
+    CurrentlyPlaying,
+    CurrentlyPlayingContext,
+    Device,
+    Paging,
+    PlayHistory,
+    Token,
+)
 from ..utils.decorators import scope
 from ..utils.scope import (
     user_modify_playback_state,

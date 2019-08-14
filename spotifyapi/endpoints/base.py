@@ -4,8 +4,7 @@ import requests
 from typing import Any, Generator, Optional
 
 from ..exceptions import ExpiredTokenError, SpotifyAPIError
-from ..models.paging import Paging
-from ..models.token import Token
+from ..models import Paging, Token
 
 
 class EndpointBase:

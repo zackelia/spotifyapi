@@ -2,10 +2,7 @@
 from typing import Generator, List, Optional
 
 from .base import EndpointBase
-from ..models.full_album import FullAlbum
-from ..models.simplified_track import SimplifiedTrack
-from ..models.paging import Paging
-from ..models.token import Token
+from ..models import FullAlbum, SimplifiedTrack, Paging, Token
 
 
 class AlbumEndpoint(EndpointBase):
