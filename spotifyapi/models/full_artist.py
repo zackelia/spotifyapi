@@ -1,12 +1,12 @@
 """Provide the full artist model."""
 from typing import List
 
+from .artist import Artist
 from .followers import Followers
 from .image import Image
-from .simplified_artist import SimplifiedArtist
 
 
-class FullArtist(SimplifiedArtist):
+class FullArtist(Artist):
     """A full artist."""
 
     def __init__(self, data):

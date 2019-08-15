@@ -1,13 +1,13 @@
 """Provide the full album model."""
 from typing import Dict, List
 
+from .album import Album
 from .copyright import Copyright
 from .paging import Paging
-from .simplified_album import SimplifiedAlbum
 from .simplified_track import SimplifiedTrack
 
 
-class FullAlbum(SimplifiedAlbum):
+class FullAlbum(Album):
     """A full album."""
 
     def __init__(self, data):

@@ -1,11 +1,11 @@
-"""Provide the full track module."""
+"""Provide the full track model."""
 from typing import Dict
 
 from .simplified_album import SimplifiedAlbum
-from .simplified_track import SimplifiedTrack
+from .track import Track
 
 
-class FullTrack(SimplifiedTrack):
+class FullTrack(Track):
     """A full track."""
 
     def __init__(self, data):

@@ -1,3 +1,5 @@
+from .album import Album
+from .artist import Artist
 from .audio_analysis import AudioAnalysis
 from .audio_features import AudioFeatures
 from .context import Context
@@ -18,3 +20,4 @@ from .simplified_artist import SimplifiedArtist
 from .simplified_track import SimplifiedTrack
 from .time_interval import TimeInterval
 from .token import Token
+from .track import Track
