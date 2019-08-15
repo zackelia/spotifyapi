@@ -2,7 +2,7 @@
 from typing import List, Optional, Union
 
 from .base import EndpointBase
-from ..models import AudioAnalysis, AudioFeatures, FullTrack, Token, SimplifiedTrack
+from ..models import AudioAnalysis, AudioFeatures, FullTrack, Token, Track
 
 
 class TrackEndpoint(EndpointBase):
@@ -11,9 +11,7 @@ class TrackEndpoint(EndpointBase):
     def __init__(self, token: Token):
         super().__init__(token)
 
-    def get_audio_analysis(
-        self, track: Union[FullTrack, SimplifiedTrack]
-    ) -> AudioAnalysis:
+    def get_audio_analysis(self, track: Track) -> AudioAnalysis:
         """Get a detailed audio analysis for a single track.
 
         The Audio Analysis endpoint provides low-level audio analysis for all of the tracks in the Spotify catalog. The
@@ -36,10 +34,7 @@ class TrackEndpoint(EndpointBase):
         return AudioAnalysis(response.json())
 
     def get_audio_features(
-        self,
-        track: Union[
-            FullTrack, SimplifiedTrack, List[FullTrack], List[SimplifiedTrack]
-        ],
+        self, track: Union[Track, List[Track]]
     ) -> Union[AudioFeatures, List[AudioFeatures]]:
         """Get audio feature information for a single or multiple tracks.
 
