@@ -13,6 +13,8 @@ from .full_track import FullTrack
 from .image import Image
 from .paging import Paging
 from .play_history import PlayHistory
+from .saved_album import SavedAlbum
+from .saved_track import SavedTrack
 from .section import Section
 from .segment import Segment
 from .simplified_album import SimplifiedAlbum
