@@ -1,5 +1,5 @@
 """Provide the simplified album model."""
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from .image import Image
 from .simplified_artist import SimplifiedArtist
@@ -11,7 +11,7 @@ class SimplifiedAlbum:
     def __init__(self, data):
         self._album_type = data["album_type"]
         self._artists = [SimplifiedArtist(d) for d in data["artists"]]
-        self._available_markets = data["available_markets"]
+        self._available_markets = data["available_markets"] if "available_markets" in data else None
         self._external_urls = data["external_urls"]
         self._href = data["href"]
         self._id = data["id"]
@@ -36,7 +36,7 @@ class SimplifiedAlbum:
         return self._artists
 
     @property
-    def available_markets(self) -> List[str]:
+    def available_markets(self) -> Optional[List[str]]:
         """
         The markets in which the album is available: ISO 3166-1 alpha-2 country codes. Note that an album is considered
         available in a market when at least 1 of its tracks is available in that market.

@@ -1,5 +1,5 @@
 """Provide the simplified track model."""
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from .simplified_artist import SimplifiedArtist
 
@@ -9,7 +9,7 @@ class SimplifiedTrack:
 
     def __init__(self, data):
         self._artists = [SimplifiedArtist(d) for d in data["artists"]]
-        self._available_markets = data["available_markets"]
+        self._available_markets = data["available_markets"] if "available_markets" in data else None
         self._disc_number = data["disc_number"]
         self._duration_ms = data["duration_ms"]
         self._explicit = data["explicit"]
@@ -32,7 +32,7 @@ class SimplifiedTrack:
         return self._artists
 
     @property
-    def available_markets(self) -> List[str]:
+    def available_markets(self) -> Optional[List[str]]:
         """A list of the countries in which the track can be played, identified by their ISO 3166-1 alpha-2 code."""
         return self._available_markets
 
