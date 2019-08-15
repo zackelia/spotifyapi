@@ -20,7 +20,7 @@ from spotifyapi import SpotifyEndpoint
 spotify = SpotifyEndpoint(token)
 
 # Get the currently playing track
-playing = spotify.get_currently_playing_track().item
+playing = spotify.get_currently_playing().item
 
 # Get the track's features using Spotify's machine learning
 features = spotify.get_audio_features(playing)
