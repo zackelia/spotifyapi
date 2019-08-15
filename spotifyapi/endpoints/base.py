@@ -14,6 +14,9 @@ class EndpointBase:
         self._token = token
         self._base_url = "https://api.spotify.com/v1"
 
+    def _delete(self, url: str, **kwargs) -> requests.models.Response:
+        return self.__request(requests.delete, url, **kwargs)
+
     def _get(self, url: str, **kwargs) -> requests.models.Response:
         return self.__request(requests.get, url, **kwargs)
 
