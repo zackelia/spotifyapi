@@ -93,7 +93,7 @@ class PlayerEndpoint(EndpointBase):
         return self._generate(paging, PlayHistory)
 
     @scope(user_read_currently_playing, user_read_playback_state)
-    def get_currently_playing_track(self) -> Optional[CurrentlyPlaying]:
+    def get_currently_playing(self) -> Optional[CurrentlyPlaying]:
         """Get the object currently being played on the user’s Spotify account.
 
         The information returned is for the last known state, which means an inactive device could be returned if it was

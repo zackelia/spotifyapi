@@ -10,11 +10,11 @@ class CurrentlyPlaying:
     """Information about the currently playing track."""
 
     def __init__(self, data):
-        self._context = Context(data["context"])
+        self._context = Context(data["context"]) if data["context"] else None
         self._timestamp = data["timestamp"]
         self._progress_ms = data["progress_ms"]
         self._is_playing = data["is_playing"]
-        self._item = FullTrack(data["item"])
+        self._track = FullTrack(data["item"])
         self._currently_playing_type = data["currently_playing_type"]
 
     @property
@@ -38,9 +38,9 @@ class CurrentlyPlaying:
         return self._is_playing
 
     @property
-    def item(self) -> Optional[FullTrack]:
+    def track(self) -> Optional[FullTrack]:
         """The currently playing track. Can be None."""
-        return self._item
+        return self._track
 
     @property
     def currently_playing_type(self) -> str:
