@@ -1,3 +1,4 @@
 requests
+pre-commit
 black
 pylint
