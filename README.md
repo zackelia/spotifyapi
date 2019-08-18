@@ -1,5 +1,9 @@
 # spotifyapi
 
+[![PyPI](https://img.shields.io/pypi/v/spotifyapi.svg)](https://pypi.python.org/pypi/spotifyapi/)
+[![PyPI](https://img.shields.io/pypi/pyversions/spotifyapi.svg)](https://pypi.python.org/pypi/spotifyapi/)
+[![Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 *spotifyapi* is a modern Python wrapper to interact with the Spotify web API. *spotifyapi* attempts to stay as close as possible to
 the original API calls while implementing more Pythonic features.
 
