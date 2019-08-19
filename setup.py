@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="spotifyapi",
-    version="0.1.0",
+    version="0.1.1",
     author="Zack Elia",
     author_email="pypi@zacharyelia.com",
     description="A Python wrapper to interact the Spotify web API",
