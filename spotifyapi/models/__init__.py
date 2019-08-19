@@ -13,6 +13,8 @@ from .full_track import FullTrack
 from .image import Image
 from .paging import Paging
 from .play_history import PlayHistory
+from .private_user import PrivateUser
+from .public_user import PublicUser
 from .saved_album import SavedAlbum
 from .saved_track import SavedTrack
 from .section import Section
@@ -23,3 +25,4 @@ from .simplified_track import SimplifiedTrack
 from .time_interval import TimeInterval
 from .token import Token
 from .track import Track
+from .user import User
