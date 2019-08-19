@@ -2,7 +2,7 @@
 from typing import Generator, List, Optional
 
 from .base import EndpointBase
-from ..models import FullAlbum, SimplifiedTrack, Paging, Token
+from ..models import Album, FullAlbum, SimplifiedTrack, Paging, Token
 
 
 class AlbumEndpoint(EndpointBase):
@@ -27,13 +27,13 @@ class AlbumEndpoint(EndpointBase):
         return FullAlbum(response.json())
 
     def get_album_tracks(
-        self, id: str, limit: Optional[int] = None, offset: Optional[int] = None
+        self, album: Album, limit: Optional[int] = None, offset: Optional[int] = None
     ) -> Generator[SimplifiedTrack, None, None]:
         """Get Spotify catalog information about an album’s tracks. Optional parameters can be used to limit the number
             of tracks returned.
 
         Args:
-            id: The Spotify ID for the album.
+            album: The Album object.
             limit: The maximum number of tracks to return. Minimum: 1. Maximum: 50.
             offset: The index of the first track to return. Use with limit to get the next set of tracks.
 
@@ -49,7 +49,7 @@ class AlbumEndpoint(EndpointBase):
 
         params = {"limit": limit, "offset": offset}
 
-        response = self._get(f"{self._albums}/{id}/tracks", params=params)
+        response = self._get(f"{self._albums}/{album.id}/tracks", params=params)
 
         paging = Paging(response.json(), SimplifiedTrack)
 

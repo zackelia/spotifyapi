@@ -1,7 +1,7 @@
 """Provide the artist endpoint."""
 from typing import Generator, List, Optional
 from .base import EndpointBase
-from ..models import FullArtist, FullTrack, Paging, SimplifiedAlbum, Token
+from ..models import Artist, FullArtist, FullTrack, Paging, SimplifiedAlbum, Token
 
 
 class ArtistEndpoint(EndpointBase):
@@ -27,7 +27,7 @@ class ArtistEndpoint(EndpointBase):
 
     def get_artist_albums(
         self,
-        id: str,
+        artist: Artist,
         include_groups: Optional[List[str]] = None,
         country: Optional[str] = "US",
         limit: Optional[int] = None,
@@ -36,7 +36,7 @@ class ArtistEndpoint(EndpointBase):
         """Get Spotify catalog information about an artist’s albums.
 
         Args:
-            id: The Spotify Id for the artist.
+            artist: The Artist object.
             include_groups: A comma-separated list of keywords that will be used to filter the response.
                 If not supplied, all album types will be returned. Valid values are:
                     - album
@@ -66,17 +66,19 @@ class ArtistEndpoint(EndpointBase):
         if include_groups:
             params["include_groups"] = ",".join(include_groups)
 
-        response = self._get(f"{self._artists}/{id}/albums", params=params)
+        response = self._get(f"{self._artists}/{artist.id}/albums", params=params)
 
         paging = Paging(response.json(), SimplifiedAlbum)
 
         return self._generate(paging, SimplifiedAlbum)
 
-    def get_artist_top_tracks(self, id: str, country: str = "US") -> List[FullTrack]:
+    def get_artist_top_tracks(
+        self, artist: Artist, country: str = "US"
+    ) -> List[FullTrack]:
         """Get Spotify catalog information about an artist’s top tracks by country.
 
         Args:
-            id: The Spotify Id for the artist.
+            artist: The Artist object.
             country: An ISO 3166-1 alpha-2 country code or the string from_token.
 
         Returns:
@@ -87,21 +89,21 @@ class ArtistEndpoint(EndpointBase):
         if not country:
             raise ValueError("Country must be defined")
 
-        response = self._get(f"{self._artists}/{id}/top-tracks", params=params)
+        response = self._get(f"{self._artists}/{artist.id}/top-tracks", params=params)
 
         return [FullTrack(track) for track in response.json()["tracks"]]
 
-    def get_related_artists(self, id: str) -> List[FullArtist]:
+    def get_related_artists(self, artist: Artist) -> List[FullArtist]:
         """Get Spotify catalog information about artists similar to a given artist. Similarity is based on analysis of
         the Spotify community’s listening history.
 
         Args:
-            id: The Spotify Id for the artist.
+            artist: The Artist object.
 
         Returns:
             Artists similar to the given artist.
         """
-        response = self._get(f"{self._artists}/{id}/related-artists")
+        response = self._get(f"{self._artists}/{artist.id}/related-artists")
 
         return [FullArtist(artist) for artist in response.json()["artists"]]
 
