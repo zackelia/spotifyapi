@@ -43,6 +43,6 @@ if features.danceability > 0.75:
     - `python3.6 -m venv venv`
     - `source venv/bin/activate`
     - `pip install -r requirements-dev.txt`
-    - `cd .git & pre-commit install`
+    - `pre-commit install`
 3. Develop following the [Spotify API guide](https://developer.spotify.com/documentation/web-api/reference/)
 4. Commit changes and submit a pull request
