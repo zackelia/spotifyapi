@@ -1,10 +1,10 @@
 """Provide the endpoint superclass."""
 import json
 import requests
-from typing import Any, Generator, Optional
+from typing import Optional
 
 from ..exceptions import ExpiredTokenError, SpotifyAPIError
-from ..models import Paging, Token
+from ..models import Token
 
 
 class EndpointBase:
@@ -49,17 +49,3 @@ class EndpointBase:
             raise SpotifyAPIError(response.json()["error"]["message"])
 
         return response
-
-    def _generate(
-        self, paging: Paging, object_factory: Any
-    ) -> Generator[Any, None, None]:
-        # Yield all objects for a paging object
-        while True:
-            for item in paging.items:
-                yield item
-
-            if not paging.next:
-                break
-
-            response = self._get(paging.next)
-            paging = Paging(response.json(), object_factory)

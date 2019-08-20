@@ -1,5 +1,5 @@
 """Provide the paging model."""
-from typing import Any, Dict, List, Optional
+from typing import Any, List, Optional
 
 
 class Paging:
@@ -15,7 +15,7 @@ class Paging:
         self._limit = data["limit"]
         self._next = data["next"]
 
-        self._obj = object_factory
+        self._object_factory = object_factory
 
     @property
     def href(self) -> str:
@@ -36,3 +36,8 @@ class Paging:
     def next(self) -> Optional[str]:
         """URL to the next page of items."""
         return self._next
+
+    @property
+    def object_factory(self) -> Any:
+        """The type of object in items."""
+        return self._object_factory
