@@ -15,7 +15,7 @@ def scope(*scopes):
                 # Check for Client Error 401 Unauthorized
                 if e.response.status_code == 401:
                     raise InvalidScopeError(
-                        f"{func.__qualname__} requires: {[scope for scope in scopes]}"
+                        f"{func.__qualname__} requires: {[s for s in scopes]}"
                     )
                 raise
 

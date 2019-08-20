@@ -1,4 +1,4 @@
-"""Provide the scope module."""
+"""Provide the scopes module."""
 
 # Follow
 user_follow_read = "user-follow-read"

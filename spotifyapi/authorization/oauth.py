@@ -3,17 +3,13 @@ import base64
 import json
 from typing import List, Optional, Tuple
 from urllib.parse import urlparse, parse_qs
-
 import requests
 
-from ..models.token import Token
+from ..models import Token
 
 
 class OAuth:
     """Provides the methods to support Spotify authorization OAuth."""
-
-    def __init__(self):
-        pass
 
     @staticmethod
     def get_authorization_url(
