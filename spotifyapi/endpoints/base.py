@@ -13,29 +13,34 @@ class EndpointBase:
     def __init__(self, token: Token):
         self._token = token
         self._base_url = "https://api.spotify.com/v1"
+        self._session = requests.Session()
+        self._session.headers.update(
+            {"Authorization": "Bearer {}".format(self._token.access_token)}
+        )
+
+    def __del__(self):
+        self._session.close()
 
     def _delete(self, url: str, **kwargs) -> requests.models.Response:
-        return self.__request(requests.delete, url, **kwargs)
+        return self.__request(self._session.delete, url, **kwargs)
 
     def _get(self, url: str, **kwargs) -> requests.models.Response:
-        return self.__request(requests.get, url, **kwargs)
+        return self.__request(self._session.get, url, **kwargs)
 
     def _put(self, url: str, **kwargs) -> requests.models.Response:
-        return self.__request(requests.put, url, **kwargs)
+        return self.__request(self._session.put, url, **kwargs)
 
     def _post(self, url: str, **kwargs) -> requests.models.Response:
-        return self.__request(requests.post, url, **kwargs)
+        return self.__request(self._session.post, url, **kwargs)
 
     def __request(
         self, method, url: str, **kwargs
     ) -> Optional[requests.models.Response]:
-        headers = {"Authorization": "Bearer {}".format(self._token.access_token)}
-
         # Serialize data to json
         if "data" in kwargs:
             kwargs["data"] = json.dumps(kwargs["data"])
 
-        response = method(url, headers=headers, **kwargs)
+        response = method(url, **kwargs)
 
         # Check if there's no content so we don't try to create an instance of something
         if response.status_code == requests.codes.no_content:
