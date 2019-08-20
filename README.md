@@ -21,7 +21,7 @@ is still possible to use the individual endpoints such as AlbumEndpoint, PlayerE
 ```python
 from spotifyapi import SpotifyEndpoint
 
-spotify = SpotifyEndpoint(token)
+spotify = SpotifyEndpoint(oauth)
 
 # Get the currently playing track
 playing = spotify.get_currently_playing().item

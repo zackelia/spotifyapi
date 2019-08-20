@@ -23,6 +23,5 @@ from .simplified_album import SimplifiedAlbum
 from .simplified_artist import SimplifiedArtist
 from .simplified_track import SimplifiedTrack
 from .time_interval import TimeInterval
-from .token import Token
 from .track import Track
 from .user import User

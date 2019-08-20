@@ -1,52 +1,77 @@
 import os
+import json
 from pathlib import Path
-import webbrowser
+from requests_oauthlib import OAuth2Session
 
 from spotifyapi.endpoints import SpotifyEndpoint
-from spotifyapi.utils.oauth import OAuth
-from spotifyapi.utils.scope import user_read_currently_playing
+from spotifyapi.authorization import AUTHORIZE_URL, TOKEN_URL
+from spotifyapi.authorization.scopes import user_read_currently_playing
 
-# Setup client variables
-REDIRECT_URI = "XXXX"
-CLIENT_ID = "XXXX"
-CLIENT_SECRET = "XXXX"
+# You will either need to set these environment variables or hard-code them here.
+CLIENT_ID = os.environ.get("SPOTIFY_CLIENT_ID")
+CLIENT_SECRET = os.environ.get("SPOTIFY_CLIENT_SECRET")
+REDIRECT_URI = os.environ.get("SPOTIFY_REDIRECT_URI")
 SCOPE = [user_read_currently_playing]
 
-# Setup OAuth
-oauth = OAuth()
-token_path = Path(os.path.dirname(os.path.abspath(__file__))).joinpath(Path(".cache/token"))
 
-# Attempt to load a token from the cache
-try:
-    with open(token_path, "r") as file:
-        token = oauth.parse_token(file.read())
-except FileNotFoundError:
-    token = None
+def save_token(token):
+    """Saves token to our cache."""
+    token_path = Path(os.path.dirname(os.path.abspath(__file__))).joinpath(
+        Path(".cache/token")
+    )
+    with open(token_path, "w") as file:
+        file.write(json.dumps(token))
 
-# Go through authorization to get a token, if necessary
+
+def load_token():
+    """Loads a token from our cache. Returns None if no token exists."""
+    token_path = Path(os.path.dirname(os.path.abspath(__file__))).joinpath(
+        Path(".cache/token")
+    )
+    try:
+        with open(token_path, "r") as file:
+            return json.loads(file.read())
+    except FileNotFoundError:
+        return None
+
+
+token = load_token()
+
+# Check if we have a token in the cache already.
 if not token:
-    url = oauth.get_authorization_url(CLIENT_ID, REDIRECT_URI, scope=SCOPE)
-    webbrowser.open(url)
+    # First, you will need to get an authorization token for the user. This code will only have to be run once. Once you
+    # obtain a token, be sure to save it somewhere so it can be used again without going through the authorization
+    # process.
+    oauth = OAuth2Session(CLIENT_ID, redirect_uri=REDIRECT_URI, scope=SCOPE)
 
-    authorization_url = input("Enter the url you were redirected to: ").strip()
-    code, _ = oauth.callback(authorization_url)
+    authorization_url, _ = oauth.authorization_url(AUTHORIZE_URL)
 
-    token = oauth.request_access_token(code, REDIRECT_URI, CLIENT_ID, CLIENT_SECRET)
+    print(f"Please go to {authorization_url} and authorize access.")
+    authorization_response = input("Enter the full callback URL: ")
 
-    os.makedirs(os.path.dirname(token_path), exist_ok=True)
-    with open(token_path, "w") as file:
-        file.write(str(token))
+    token = oauth.fetch_token(
+        TOKEN_URL,
+        authorization_response=authorization_response,
+        client_secret=CLIENT_SECRET,
+    )
 
-# Check if the current token is expired and refresh if applicable
-if token.is_expired():
-    token.refresh(CLIENT_ID, CLIENT_SECRET)
+    # Save this token in a cache somewhere so it can be loaded at a later time.
+    save_token(token)
 
-    os.makedirs(os.path.dirname(token_path), exist_ok=True)
-    with open(token_path, "w") as file:
-        file.write(str(token))
+# Optionally, create an instance of OAuth that will auto refresh the token and pass that to spotifyapi.
+EXTRA = {"client_id": CLIENT_ID, "client_secret": CLIENT_SECRET}
+
+oauth = OAuth2Session(
+    CLIENT_ID,
+    token=token,
+    auto_refresh_url=TOKEN_URL,
+    auto_refresh_kwargs=EXTRA,
+    token_updater=save_token,
+)
 
 # Test that the token works on an endpoint
-spotify = SpotifyEndpoint(token)
+spotify = SpotifyEndpoint(oauth)
 
-track = spotify.get_currently_playing_track()
-print(track.item.name)
+me = spotify.get_current_user()
+
+print(me.display_name)

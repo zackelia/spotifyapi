@@ -1,3 +1,4 @@
 """Provide the authorization flow."""
 
-from .oauth import OAuth
+AUTHORIZE_URL = "https://accounts.spotify.com/authorize"
+TOKEN_URL = "https://accounts.spotify.com/api/token"
