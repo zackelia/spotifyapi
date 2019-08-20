@@ -2,36 +2,32 @@
 import json
 import requests
 from typing import Optional
+from requests_oauthlib import OAuth2Session
 
 from ..exceptions import ExpiredTokenError, SpotifyAPIError
-from ..models import Token
 
 
 class EndpointBase:
     """Base endpoint functionality."""
 
-    def __init__(self, token: Token):
-        self._token = token
+    def __init__(self, oauth: OAuth2Session):
+        self._oauth = oauth
         self._base_url = "https://api.spotify.com/v1"
-        self._session = requests.Session()
-        self._session.headers.update(
-            {"Authorization": "Bearer {}".format(self._token.access_token)}
-        )
 
     def __del__(self):
-        self._session.close()
+        self._oauth.close()
 
     def _delete(self, url: str, **kwargs) -> requests.models.Response:
-        return self.__request(self._session.delete, url, **kwargs)
+        return self.__request(self._oauth.delete, url, **kwargs)
 
     def _get(self, url: str, **kwargs) -> requests.models.Response:
-        return self.__request(self._session.get, url, **kwargs)
+        return self.__request(self._oauth.get, url, **kwargs)
 
     def _put(self, url: str, **kwargs) -> requests.models.Response:
-        return self.__request(self._session.put, url, **kwargs)
+        return self.__request(self._oauth.put, url, **kwargs)
 
     def _post(self, url: str, **kwargs) -> requests.models.Response:
-        return self.__request(self._session.post, url, **kwargs)
+        return self.__request(self._oauth.post, url, **kwargs)
 
     def __request(
         self, method, url: str, **kwargs
@@ -50,7 +46,7 @@ class EndpointBase:
             response.raise_for_status()
         except requests.exceptions.HTTPError:
             if "token expired" in response.json()["error"]["message"]:
-                raise ExpiredTokenError(self._token.access_token)
+                raise ExpiredTokenError(self._oauth.token.access_token)
             raise SpotifyAPIError(response.json()["error"]["message"])
 
         return response

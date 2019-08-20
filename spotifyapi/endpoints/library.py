@@ -1,10 +1,12 @@
 """Provide the user library endpoint."""
 from typing import Generator, List, Optional, Union
+from requests_oauthlib import OAuth2Session
 
 from .base import EndpointBase
-from ..models import Album, FullAlbum, FullTrack, Paging, SavedAlbum, SavedTrack, Track
-from ..utils.decorators import scope
-from ..utils.scope import user_library_read, user_library_modify
+from ..authorization.decorators import scope
+from ..authorization.scopes import user_library_read, user_library_modify
+from ..models import Album, Paging, SavedAlbum, SavedTrack, Track
+from ..utils import generate
 
 
 class LibraryEndpoint(EndpointBase):
@@ -13,8 +15,8 @@ class LibraryEndpoint(EndpointBase):
     Music” library.
     """
 
-    def __init__(self, token):
-        super().__init__(token)
+    def __init__(self, oauth: OAuth2Session):
+        super().__init__(oauth)
 
         self._library = f"{self._base_url}/me"
 
@@ -105,7 +107,7 @@ class LibraryEndpoint(EndpointBase):
 
         paging = Paging(response.json(), SavedAlbum)
 
-        return self._generate(paging, SavedAlbum)
+        return generate(paging, self._oauth)
 
     @scope(user_library_read)
     def get_saved_tracks(
@@ -138,7 +140,7 @@ class LibraryEndpoint(EndpointBase):
 
         paging = Paging(response.json(), SavedTrack)
 
-        return self._generate(paging, SavedTrack)
+        return generate(paging, self._oauth)
 
     @scope(user_library_modify)
     def remove_saved_albums(self, albums: Union[Album, List[Album]]):

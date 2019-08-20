@@ -1,15 +1,16 @@
 """Provide the track endpoint."""
 from typing import List, Optional, Union
+from requests_oauthlib import OAuth2Session
 
 from .base import EndpointBase
-from ..models import AudioAnalysis, AudioFeatures, FullTrack, Token, Track
+from ..models import AudioAnalysis, AudioFeatures, FullTrack, Track
 
 
 class TrackEndpoint(EndpointBase):
     """Endpoints for retrieving information about one or more tracks from the Spotify catalog."""
 
-    def __init__(self, token: Token):
-        super().__init__(token)
+    def __init__(self, oauth: OAuth2Session):
+        super().__init__(oauth)
 
     def get_audio_analysis(self, track: Track) -> AudioAnalysis:
         """Get a detailed audio analysis for a single track.

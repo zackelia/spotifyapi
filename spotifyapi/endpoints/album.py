@@ -1,15 +1,17 @@
 """Provide the album endpoint."""
 from typing import Generator, List, Optional
+from requests_oauthlib import OAuth2Session
 
 from .base import EndpointBase
-from ..models import Album, FullAlbum, SimplifiedTrack, Paging, Token
+from ..models import Album, FullAlbum, SimplifiedTrack, Paging
+from ..utils import generate
 
 
 class AlbumEndpoint(EndpointBase):
     """Endpoints for retrieving information about one or more albums from the Spotify catalog."""
 
-    def __init__(self, token: Token):
-        super().__init__(token)
+    def __init__(self, oauth: OAuth2Session):
+        super().__init__(oauth)
 
         self._albums = f"{self._base_url}/albums"
 
@@ -53,7 +55,7 @@ class AlbumEndpoint(EndpointBase):
 
         paging = Paging(response.json(), SimplifiedTrack)
 
-        return self._generate(paging, SimplifiedTrack)
+        return generate(paging, self._oauth)
 
     def get_albums(self, ids: List[str]) -> List[Optional[FullAlbum]]:
         """Get Spotify catalog information for multiple albums identified by their Spotify IDs.

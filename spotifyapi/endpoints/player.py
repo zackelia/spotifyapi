@@ -1,29 +1,30 @@
 """Provide the player endpoint."""
 from typing import List, Generator, Optional
+from requests_oauthlib import OAuth2Session
 
 from .base import EndpointBase
+from ..authorization.decorators import scope
+from ..authorization.scopes import (
+    user_modify_playback_state,
+    user_read_currently_playing,
+    user_read_playback_state,
+    user_read_recently_played,
+)
 from ..models import (
     CurrentlyPlaying,
     CurrentlyPlayingContext,
     Device,
     Paging,
     PlayHistory,
-    Token,
 )
-from ..utils.decorators import scope
-from ..utils.scope import (
-    user_modify_playback_state,
-    user_read_currently_playing,
-    user_read_playback_state,
-    user_read_recently_played,
-)
+from ..utils import generate
 
 
 class PlayerEndpoint(EndpointBase):
     """Retrieve and modify the user's playback."""
 
-    def __init__(self, token: Token):
-        super().__init__(token)
+    def __init__(self, oauth: OAuth2Session):
+        super().__init__(oauth)
 
         self._player = f"{self._base_url}/me/player"
 
@@ -90,7 +91,7 @@ class PlayerEndpoint(EndpointBase):
 
         paging = Paging(response.json(), PlayHistory)
 
-        return self._generate(paging, PlayHistory)
+        return generate(paging, self._oauth)
 
     @scope(user_read_currently_playing, user_read_playback_state)
     def get_currently_playing(self) -> Optional[CurrentlyPlaying]:

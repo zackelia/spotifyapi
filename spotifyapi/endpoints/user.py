@@ -1,13 +1,15 @@
 """Provide the user endpoint."""
-from typing import Optional
+from requests_oauthlib import OAuth2Session
+
 from .base import EndpointBase
-from ..models import Token, PublicUser, PrivateUser
+from ..models import PublicUser, PrivateUser
 
 
 class UserEndpoint(EndpointBase):
     """Endpoints for retrieving information about a user’s profile."""
-    def __init__(self, token: Token):
-        super().__init__(token)
+
+    def __init__(self, oauth: OAuth2Session):
+        super().__init__(oauth)
 
         self._user = f"{self._base_url}"
 

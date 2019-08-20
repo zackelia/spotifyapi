@@ -1,14 +1,17 @@
 """Provide the artist endpoint."""
 from typing import Generator, List, Optional
+from requests_oauthlib import OAuth2Session
+
 from .base import EndpointBase
-from ..models import Artist, FullArtist, FullTrack, Paging, SimplifiedAlbum, Token
+from ..models import Artist, FullArtist, FullTrack, Paging, SimplifiedAlbum
+from ..utils import generate
 
 
 class ArtistEndpoint(EndpointBase):
     """Endpoints for retrieving information about one or more artists from the Spotify catalog."""
 
-    def __init__(self, token: Token):
-        super().__init__(token)
+    def __init__(self, oauth: OAuth2Session):
+        super().__init__(oauth)
 
         self._artists = f"{self._base_url}/artists"
 
@@ -70,7 +73,7 @@ class ArtistEndpoint(EndpointBase):
 
         paging = Paging(response.json(), SimplifiedAlbum)
 
-        return self._generate(paging, SimplifiedAlbum)
+        return generate(paging, self._oauth)
 
     def get_artist_top_tracks(
         self, artist: Artist, country: str = "US"
