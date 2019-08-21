@@ -30,3 +30,6 @@ app_remote_control = "app-remote-control"
 # Users
 user_read_email = "user-read-email"
 user_read_private = "user-read-private"
+
+# Image uploading
+ugc_image_upload = "ugc-image-upload"
