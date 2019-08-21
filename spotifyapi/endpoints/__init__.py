@@ -4,6 +4,7 @@ from .album import AlbumEndpoint
 from .artist import ArtistEndpoint
 from .library import LibraryEndpoint
 from .player import PlayerEndpoint
+from .playlist import PlaylistEndpoint
 from .track import TrackEndpoint
 from .user import UserEndpoint
 
@@ -13,6 +14,7 @@ class SpotifyEndpoint(
     ArtistEndpoint,
     LibraryEndpoint,
     PlayerEndpoint,
+    PlaylistEndpoint,
     TrackEndpoint,
     UserEndpoint,
 ):
