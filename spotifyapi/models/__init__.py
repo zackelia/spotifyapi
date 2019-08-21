@@ -9,10 +9,13 @@ from .device import Device
 from .followers import Followers
 from .full_album import FullAlbum
 from .full_artist import FullArtist
+from .full_playlist import FullPlaylist
 from .full_track import FullTrack
 from .image import Image
 from .paging import Paging
 from .play_history import PlayHistory
+from .playlist import Playlist
+from .playlist_track import PlaylistTrack
 from .private_user import PrivateUser
 from .public_user import PublicUser
 from .saved_album import SavedAlbum
@@ -21,7 +24,9 @@ from .section import Section
 from .segment import Segment
 from .simplified_album import SimplifiedAlbum
 from .simplified_artist import SimplifiedArtist
+from .simplified_playlist import SimplifiedPlaylist
 from .simplified_track import SimplifiedTrack
 from .time_interval import TimeInterval
 from .track import Track
+from .tracks import Tracks
 from .user import User
