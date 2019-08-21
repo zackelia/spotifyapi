@@ -9,12 +9,12 @@ class User:
     """A User."""
 
     def __init__(self, data):
-        self._display_name = data["display_name"] if 'display_name' in data else None
+        self._display_name = data["display_name"] if "display_name" in data else None
         self._external_urls = data["external_urls"]
-        self._followers = data["followers"]
+        self._followers = data["followers"] if "followers" in data else None
         self._href = data["href"]
         self._id = data["id"]
-        self._images = data["images"]
+        self._images = [Image(d) for d in data["images"]] if "images" in data else []
         self._type = data["type"]
         self._uri = data["uri"]
 

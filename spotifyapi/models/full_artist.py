@@ -12,9 +12,9 @@ class FullArtist(Artist):
     def __init__(self, data):
         super().__init__(data)
 
-        self._followers = data["followers"]
+        self._followers = Followers(data["followers"])
         self._genres = data["genres"]
-        self._images = data["images"]
+        self._images = [Image(d) for d in data["images"]]
         self._popularity = data["popularity"]
 
     @property
