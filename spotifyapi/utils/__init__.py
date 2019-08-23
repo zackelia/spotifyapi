@@ -1,21 +1,24 @@
 """Provide the utils module."""
 from typing import Any, Generator
-from requests import Session
+from requests_oauthlib import OAuth2Session
 
 from ..models import Paging
 
 
-def generate(paging: Paging, session: Session) -> Generator[Any, None, None]:
+def generate(
+    data, object_factory: Any, session: OAuth2Session
+) -> Generator[Any, None, None]:
     """Yield all objects for a paging object
 
     Args:
-        paging: The paging object to yield from.
+        data: The initial paging data.
+        object_factory: The type of object to yield.
         session: The session used to get the rest of the items in the paging object.
 
     Returns:
         A generator of the items in the paging object.
     """
-    object_factory = paging.object_factory
+    paging = Paging(data, object_factory)
 
     while True:
         for item in paging.items:

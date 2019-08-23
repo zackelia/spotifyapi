@@ -5,7 +5,7 @@ from requests_oauthlib import OAuth2Session
 from .base import EndpointBase
 from ..authorization.decorators import scope
 from ..authorization.scopes import user_library_read, user_library_modify
-from ..models import Album, Paging, SavedAlbum, SavedTrack, Track
+from ..models import Album, SavedAlbum, SavedTrack, Track
 from ..utils import generate
 
 
@@ -105,9 +105,7 @@ class LibraryEndpoint(EndpointBase):
 
         response = self._get(f"{self._library}/albums", params=params)
 
-        paging = Paging(response.json(), SavedAlbum)
-
-        return generate(paging, self._oauth)
+        return generate(response.json(), SavedAlbum, self._oauth)
 
     @scope(user_library_read)
     def get_saved_tracks(
@@ -138,9 +136,7 @@ class LibraryEndpoint(EndpointBase):
 
         response = self._get(f"{self._library}/tracks", params=params)
 
-        paging = Paging(response.json(), SavedTrack)
-
-        return generate(paging, self._oauth)
+        return generate(response.json(), SavedTrack, self._oauth)
 
     @scope(user_library_modify)
     def remove_saved_albums(self, albums: Union[Album, List[Album]]):

@@ -10,13 +10,7 @@ from ..authorization.scopes import (
     user_read_playback_state,
     user_read_recently_played,
 )
-from ..models import (
-    CurrentlyPlaying,
-    CurrentlyPlayingContext,
-    Device,
-    Paging,
-    PlayHistory,
-)
+from ..models import CurrentlyPlaying, CurrentlyPlayingContext, Device, PlayHistory
 from ..utils import generate
 
 
@@ -89,9 +83,7 @@ class PlayerEndpoint(EndpointBase):
 
         response = self._get(f"{self._player}/recently-played", params=params)
 
-        paging = Paging(response.json(), PlayHistory)
-
-        return generate(paging, self._oauth)
+        return generate(response.json(), PlayHistory, self._oauth)
 
     @scope(user_read_currently_playing, user_read_playback_state)
     def get_currently_playing(self) -> Optional[CurrentlyPlaying]:

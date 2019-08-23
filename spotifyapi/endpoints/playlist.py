@@ -15,7 +15,6 @@ from ..authorization.scopes import (
 from ..models import (
     FullPlaylist,
     Image,
-    Paging,
     Playlist,
     PlaylistTrack,
     PrivateUser,
@@ -186,9 +185,7 @@ class PlaylistEndpoint(EndpointBase):
 
         response = self._get(f"{self._base_url}/me/playlists", params=params)
 
-        paging = Paging(response.json(), SimplifiedPlaylist)
-
-        return generate(paging, self._oauth)
+        return generate(response.json(), SimplifiedPlaylist, self._oauth)
 
     @scope(playlist_modify_private, playlist_read_collaborative)
     def get_users_playlists(
@@ -223,9 +220,7 @@ class PlaylistEndpoint(EndpointBase):
             f"{self._base_url}/users/{user.id}/playlists", params=params
         )
 
-        paging = Paging(response.json(), SimplifiedPlaylist)
-
-        return generate(paging, self._oauth)
+        return generate(response.json(), SimplifiedPlaylist, self._oauth)
 
     def get_playlist_cover_image(self, playlist: Playlist) -> Union[Image, List[Image]]:
         """Get the current image(s) associated with a specific playlist.
@@ -286,9 +281,7 @@ class PlaylistEndpoint(EndpointBase):
 
         response = self._get(f"{self._base_url}/playlists/{playlist.id}/tracks")
 
-        paging = Paging(response.json(), PlaylistTrack)
-
-        return generate(paging, self._oauth)
+        return generate(response.json(), PlaylistTrack, self._oauth)
 
     @scope(playlist_modify_public, playlist_modify_private)
     def remove_playlist_tracks(

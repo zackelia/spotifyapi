@@ -3,7 +3,7 @@ from typing import Generator, List, Optional
 from requests_oauthlib import OAuth2Session
 
 from .base import EndpointBase
-from ..models import Album, FullAlbum, SimplifiedTrack, Paging
+from ..models import Album, FullAlbum, SimplifiedTrack
 from ..utils import generate
 
 
@@ -53,9 +53,7 @@ class AlbumEndpoint(EndpointBase):
 
         response = self._get(f"{self._albums}/{album.id}/tracks", params=params)
 
-        paging = Paging(response.json(), SimplifiedTrack)
-
-        return generate(paging, self._oauth)
+        return generate(response.json(), SimplifiedTrack, self._oauth)
 
     def get_albums(self, ids: List[str]) -> List[Optional[FullAlbum]]:
         """Get Spotify catalog information for multiple albums identified by their Spotify IDs.

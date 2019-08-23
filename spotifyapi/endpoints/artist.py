@@ -3,7 +3,7 @@ from typing import Generator, List, Optional
 from requests_oauthlib import OAuth2Session
 
 from .base import EndpointBase
-from ..models import Artist, FullArtist, FullTrack, Paging, SimplifiedAlbum
+from ..models import Artist, FullArtist, FullTrack, SimplifiedAlbum
 from ..utils import generate
 
 
@@ -71,9 +71,7 @@ class ArtistEndpoint(EndpointBase):
 
         response = self._get(f"{self._artists}/{artist.id}/albums", params=params)
 
-        paging = Paging(response.json(), SimplifiedAlbum)
-
-        return generate(paging, self._oauth)
+        return generate(response.json(), SimplifiedAlbum, self._oauth)
 
     def get_artist_top_tracks(
         self, artist: Artist, country: str = "US"
