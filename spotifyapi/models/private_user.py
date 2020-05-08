@@ -9,9 +9,9 @@ class PrivateUser(User):
     def __init__(self, data):
         super().__init__(data)
 
-        self._country = data["country"] if 'country' in data else None
-        self._email = data["email"] if 'email' in data else None
-        self._product = data["product"] if 'product' in data else None
+        self._country = data["country"] if "country" in data else None
+        self._email = data["email"] if "email" in data else None
+        self._product = data["product"] if "product" in data else None
 
     @property
     def country(self) -> Optional[str]:

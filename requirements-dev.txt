@@ -2,4 +2,4 @@ requests
 requests-oauthlib
 pre-commit
 black
-pylint
+flake8
